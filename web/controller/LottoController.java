@@ -18,7 +18,7 @@ public class LottoController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String money = request.getParameter("money");
-		System.out.println("lotto로 도착 성공 "+money);
+		System.out.println("lotto로 도착 성공 "+money+"원");
 		LottoBean param = new LottoBean();
 		LottoService service = new LottoServiceImpl();
 		service.createLotto(param);

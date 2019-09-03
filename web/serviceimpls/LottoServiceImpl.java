@@ -7,68 +7,93 @@ import com.lotto.web.daos.LottoDAO;
 import com.lotto.web.domains.LottoBean;
 import com.lotto.web.services.LottoService;
 
-public class LottoServiceImpl implements LottoService{
+public class LottoServiceImpl implements LottoService {
 	private LottoDAO dao;
+	private LottoBean lotto;
+	Random ran;
+
 	public LottoServiceImpl() {
+		lotto = new LottoBean();
 		dao = new LottoDAOImpl();
+		ran = new Random();
 	}
 
 	@Override
 	public void createLotto(LottoBean param) {
-		String seqNum = "";
-		String lottoNum = "";
-		Random ran = new Random();
-		for (int i = 0; i < 3; i++) {
-			if (i == 0) {
-				seqNum += "N";
-			}
-			else if (i == 1) {
-				seqNum += "O.";
-			} else {
-				seqNum += ran.nextInt(9999) + "/";
-				param.setLottoSeq(String.valueOf(seqNum));
-			}
-		}for (int j = 0; j < 6; j++) {
-			if (j != 5) {
-				lottoNum += ran.nextInt(45)+1+ ",";
-			} else {
-				lottoNum += ran.nextInt(45)+1;
-			}
-			param.setLotteryNum(String.valueOf(lottoNum));
-		}
-		System.out.println(param.getLottoSeq()+param.getLotteryNum());
+		param.setBall(createBall()+"");
+		param.setLotteryNum(createLotteryNum());
+		param.setLottoSeq(createLottoSeq());
 		dao.insertLotto(param);
 	}
 
 	@Override
-	public String createLottoSeq(String param) {
+	public String createLottoSeq() {
 		String seqNum = "";
+		seqNum = "NO." + ran.nextInt(9999) + "/";
+		lotto.setLottoSeq(String.valueOf(seqNum));
 		return seqNum;
 	}
 
 	@Override
-	public String createBall(String param) {
-		String ballNum = "";
-		return ballNum;
+	public int createBall() {
+		return (int) (Math.random() * 45) + 1;
 	}
 
 	@Override
-	public String createLotteryNum(String param) {
-		String lotteryNum = "";
-		return lotteryNum;
+	public String createLotteryNum() {
+		String result = "";
+		int[] arr = new int[6];
+		for (int i = 0; i < arr.length; i++) {
+			int a = createBall();
+			if (!exist(arr, a)) {
+				arr[i] = a;
+			} else {
+				i--;
+			}
+		}
+		arr = bubbleSort(arr, true);
+		for (int i = 0; i < arr.length; i++) {
+			if(i!=5) {
+				result += arr[i] + " , ";
+			}else {
+				result += arr[i];
+			}
+		}
+		return result;
 	}
 
 	@Override
-	public boolean duplicaterPrevention(int[] arr) {
-		
-		return false;
+	public boolean exist(int[] arr, int a) {
+		boolean b = false;
+		for (int i : arr) {
+			if (a == i) {
+				b = true;
+			}
+		}
+		return b;
 	}
 
 	@Override
-	public String ascendingSort(int[] arr) {
-		
-		return null;
+	public int[] bubbleSort(int[] arr, boolean flag) {
+		int t = 0;
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr.length - 1; j++) {
+				if (flag) {
+					if (arr[j] > arr[j + 1]) {
+						t = arr[j];
+						arr[j] = arr[j + 1];
+						arr[j + 1] = t;
+					}
+				} else {
+					if (arr[j] < arr[j + 1]) {
+						t = arr[j];
+						arr[j] = arr[j + 1];
+						arr[j + 1] = t;
+					}
+				}
+			}
+		}
+		return arr;
 	}
-
 
 }
