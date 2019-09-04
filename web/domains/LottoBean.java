@@ -2,10 +2,10 @@ package com.lotto.web.domains;
 
 import java.io.Serializable;
 
-public class LottoBean implements Serializable{
+public class LottoBean implements Serializable {
 	private String lottoSeq, ball, lotteryNum;
 
-public String getLottoSeq() {
+	public String getLottoSeq() {
 		return lottoSeq;
 	}
 
