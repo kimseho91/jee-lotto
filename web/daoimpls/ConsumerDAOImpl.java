@@ -1,6 +1,8 @@
 package com.lotto.web.daoimpls;
 
 import java.io.File;
+
+import com.lotto.web.pool.Constants;
 import com.lotto.web.daos.ConsumerDAO;
 import com.lotto.web.domains.ConsumerBean;
 import java.io.BufferedWriter;
@@ -12,13 +14,11 @@ import java.util.List;
 import java.io.FileReader;
 
 public class ConsumerDAOImpl implements ConsumerDAO{
-	public static final String FILE_PATH = String.format("C:%sUsers%suser%seclipse-jee%sjee-lotto%sWebContent%sresources%stxt%s"
-												,File.separator,File.separator,File.separator,File.separator
-												,File.separator,File.separator,File.separator,File.separator);
+	
 	@Override
 	public void insertConsumer(ConsumerBean param) {
 		try {
-			File file = new File(FILE_PATH+"consumers.txt");
+			File file = new File(Constants.FILE_PATH+"consumer0905.txt");
 			@SuppressWarnings("resource")
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file,true));
 			writer.write(String.format("%s,%s", param.getCid(), param.getPass()));
@@ -28,5 +28,22 @@ public class ConsumerDAOImpl implements ConsumerDAO{
 			e.printStackTrace();
 		}
 	}
+	@Override
+	public ConsumerBean login(ConsumerBean param) {
+		try {
+			File file = new File(Constants.FILE_PATH + "consumer0905.txt");
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String msg = reader.readLine();
+			reader.close();
+			String[] info = new String[2];
+			info = msg.split(",");
+			param.setCid(info[0]);
+			param.setPass(info[1]);
+			
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return param;
+		}
 
 }

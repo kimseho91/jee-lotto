@@ -14,8 +14,12 @@ public class ConsumerServiceImpl implements ConsumerService {
 
 	@Override
 	public void registerConsumer(ConsumerBean param) {
-
 		dao.insertConsumer(param);
+	}
+
+	@Override
+	public ConsumerBean login(ConsumerBean param) {
+		return dao.login(param);
 	}
 
 }

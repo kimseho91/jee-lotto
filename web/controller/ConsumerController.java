@@ -17,6 +17,8 @@ public class ConsumerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ConsumerBean param = new ConsumerBean();
+		ConsumerService service = new ConsumerServiceImpl();
 		switch (request.getParameter("action")) {
 		case "move":
 			request.getRequestDispatcher
@@ -29,11 +31,9 @@ public class ConsumerController extends HttpServlet {
 		case "join":
 			String cid = request.getParameter("cid");
 			String pass = request.getParameter("pass");
-			ConsumerBean param = new ConsumerBean();
 			param.setCid(cid);
 			param.setPass(pass);
-//			ConsumerService service = new ConsumerServiceImpl();
-//			service.registerConsumer(param);
+			service.registerConsumer(param);
 			request.getRequestDispatcher
 			(String.format(
 					Constants.VIEW_PATH,
@@ -42,6 +42,19 @@ public class ConsumerController extends HttpServlet {
 					.forward(request, response);
 			break;
 		case "login":
+			cid = request.getParameter("cid");
+			pass = request.getParameter("pass");
+			if(cid.equals(service.login(param).getCid())&&pass.equals(service.login(param).getPass())) {
+				request.setAttribute("customer",param);
+				request.getRequestDispatcher(
+						String.format(Constants.VIEW_PATH, "customer", request.getParameter("dest")))
+						.forward(request, response);
+			}else {
+				request.setAttribute("customer",param);
+				request.getRequestDispatcher(
+						String.format(Constants.VIEW_PATH, "customer","login"))
+						.forward(request, response);
+			}
 
 			break;
 		}
